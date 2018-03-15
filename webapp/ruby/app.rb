@@ -117,13 +117,17 @@ SELECT *
 FROM comments as c
 INNER JOIN users as u
 ON c.user_id = u.id
-WHERE c.product_id = ?
+WHERE c.product_id IN (?)
 ORDER BY c.created_at DESC
-LIMIT 5
 SQL
-    cmt_count_query = 'SELECT count(*) as count FROM comments WHERE product_id = ?'
+    comments = db.xquery(cmt_query, products.map {|pr| pr[:id] })
+    products.each do |product|
+      cmts = comments.map {|comment| comment if comment[:product_id] == product[:id] }.compact
+      product[:c_count] = cmts.length
+      product[:comments] = cmts.slice(0, 5)
+    end
 
-    erb :index, locals: { products: products, cmt_query: cmt_query, cmt_count_query: cmt_count_query }
+    erb :index, locals: { products: products }
   end
 
   get '/users/:user_id' do
