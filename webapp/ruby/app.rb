@@ -165,10 +165,14 @@ ORDER BY h.id DESC
 SQL
     products = db.xquery(products_query, params[:user_id])
 
-    total_pay = 0
-    products.each do |product|
-      total_pay += product[:price]
-    end
+    sum_query = <<SQL
+SELECT SUM(p.price) as total_pay
+FROM histories as h
+INNER JOIN products as p
+ON h.product_id = p.id
+WHERE h.user_id = ?
+SQL
+    total_pay = db.xquery(sum_query, params[:user_id]).first[:total_pay]
 
     user = cache.fetch("user_#{params[:user_id]}") do
       db.xquery('SELECT * FROM users WHERE id = ?', params[:user_id]).first
