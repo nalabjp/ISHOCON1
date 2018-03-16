@@ -83,9 +83,16 @@ class Ishocon1::WebApp < Sinatra::Base
 
     def already_bought?(product_id)
       return false unless current_user
+      cache_key = "user_#{current_user[:id]}_has_product_#{product_id}"
+      return true if cache.exist?(cache_key)
+
       count = db.xquery('SELECT count(*) as count FROM histories WHERE product_id = ? AND user_id = ?', \
                         product_id, current_user[:id]).first[:count]
-      count > 0
+      if count > 0
+        cache.write(cache_key, 1)
+        return true
+      end
+      false
     end
 
     def create_comment(product_id, user_id, content)
