@@ -135,7 +135,7 @@ class Ishocon1::WebApp < Sinatra::Base
     offset = page * 50
     ids = [*(offset + 1)..(offset + 50)]
     products = cache.fetch("products_offset_#{offset}") do
-      db.xquery("SELECT id, name, LEFT(description, 70), image_path, price FROM products WHERE id IN (?) ORDER BY id DESC", ids).to_a
+      db.xquery("SELECT id, name, LEFT(description, 70) as description, image_path, price FROM products WHERE id IN (?) ORDER BY id DESC", ids).to_a
     end
     cmt_query = <<SQL
 SELECT *
@@ -157,7 +157,7 @@ SQL
 
   get '/users/:user_id' do
     products_query = <<SQL
-SELECT p.id, p.name, LEFT(p.description, 70), p.image_path, p.price, h.created_at
+SELECT p.id, p.name, LEFT(p.description, 70) as description, p.image_path, p.price, h.created_at
 FROM histories as h
 INNER JOIN products as p
 ON h.product_id = p.id
