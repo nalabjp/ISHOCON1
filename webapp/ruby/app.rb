@@ -59,6 +59,7 @@ class Ishocon1::WebApp < Sinatra::Base
     end
 
     def current_user
+      return unless session[:user_id]
       {
         id: session[:user_id],
         name: session[:user_name]
