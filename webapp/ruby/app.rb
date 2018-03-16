@@ -3,6 +3,8 @@ require 'mysql2'
 require 'mysql2-cs-bind'
 require 'erubis'
 require 'rack-lineprof'
+require 'active_support'
+require 'active_support/all'
 
 module Ishocon1
   class AuthenticationError < StandardError; end
@@ -16,6 +18,12 @@ class Ishocon1::WebApp < Sinatra::Base
   set :erb, escape_html: true
   set :public_folder, File.expand_path('../public', __FILE__)
   set :protection, true
+
+  class << self
+    def cache
+      @cache ||= ActiveSupport::Cache.lookup_store(:memory_store)
+    end
+  end
 
   helpers do
     def config
@@ -87,6 +95,10 @@ class Ishocon1::WebApp < Sinatra::Base
     def create_comment(product_id, user_id, content)
       db.xquery('INSERT INTO comments (product_id, user_id, content, created_at) VALUES (?, ?, ?, ?)', \
         product_id, user_id, content, time_now_db)
+    end
+
+    def cache
+      self.class.cache
     end
   end
 
