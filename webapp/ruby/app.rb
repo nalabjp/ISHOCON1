@@ -111,7 +111,9 @@ class Ishocon1::WebApp < Sinatra::Base
 
   get '/' do
     page = params[:page].to_i || 0
-    products = db.xquery("SELECT * FROM products ORDER BY id DESC LIMIT 50 OFFSET #{page * 50}")
+    offset = page * 50
+    ids = [*((offset + 1)..(offset + 50))]
+    products = db.xquery("SELECT * FROM products WHERE id IN (?) ORDER BY id DESC", ids)
     cmt_query = <<SQL
 SELECT *
 FROM comments as c
