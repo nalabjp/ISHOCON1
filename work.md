@@ -2,7 +2,8 @@
 - my.cnf
     - slow_query_log
     - slow_query_log-file = /tmp/mysql-slow.sql
-    - long_query_time = 1
+    - long_query_time = 0.2
+    - log-queries-not-using-indexes
 - index
     - ALTER TABLE comments ADD INDEX index_product_id_on_comments(product_id);
     - ALTER TABLE comments ADD INDEX index_user_id_on_comments(user_id);
@@ -19,3 +20,6 @@
         - thread_cache_size (start at 4)
 - nginx
     - unix domain socket
+    - cache asset files
+- ruby
+    - ruby 2.5.0
