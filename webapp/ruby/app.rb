@@ -168,7 +168,9 @@ SQL
       total_pay += product[:price]
     end
 
-    user = db.xquery('SELECT * FROM users WHERE id = ?', params[:user_id]).first
+    user = cache.fetch("user_#{params[:user_id]}") do
+      db.xquery('SELECT * FROM users WHERE id = ?', params[:user_id]).first
+    end
     erb :mypage, locals: { products: products, user: user, total_pay: total_pay }
   end
 
