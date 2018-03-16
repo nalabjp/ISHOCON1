@@ -141,7 +141,7 @@ class Ishocon1::WebApp < Sinatra::Base
       db.xquery("SELECT id, name, LEFT(description, 70) as description, image_path, price FROM products WHERE id IN (?) ORDER BY id DESC", ids).to_a
     end
     cmt_query = <<SQL
-SELECT *
+SELECT c.product_id, LEFT(c.content, 25) as content, u.name
 FROM comments as c
 INNER JOIN users as u
 ON c.user_id = u.id
