@@ -133,8 +133,9 @@ class Ishocon1::WebApp < Sinatra::Base
   get '/' do
     page = params[:page].to_i || 0
     offset = page * 50
+    ids = [*(offset + 1)..(offset + 50)]
     products = cache.fetch("products_offset_#{offset}") do
-      db.xquery("SELECT id, name, LEFT(description, 70), image_path, price FROM products ORDER BY id DESC LIMIT 50 OFFSET #{offset}").to_a
+      db.xquery("SELECT id, name, LEFT(description, 70), image_path, price FROM products WHERE id IN (?) ORDER BY id DESC", ids).to_a
     end
     cmt_query = <<SQL
 SELECT *
