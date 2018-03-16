@@ -142,9 +142,9 @@ ON c.user_id = u.id
 WHERE c.product_id IN (?)
 ORDER BY c.created_at DESC
 SQL
-    comments = db.xquery(cmt_query, products.map {|pr| pr[:id] })
+    comments = db.xquery(cmt_query, products.map {|pr| pr[:id] }).group_by{|c| c[:product_id] }
     products.each do |product|
-      cmts = comments.map {|comment| comment if comment[:product_id] == product[:id] }.compact
+      cmts = comments[product[:id]]
       product[:c_count] = cmts.length
       product[:comments] = cmts.slice(0, 5)
     end
