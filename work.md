@@ -8,3 +8,14 @@
     - ALTER TABLE comments ADD INDEX index_user_id_on_comments(user_id);
     - ALTER TABLE users ADD INDEX index_email_password_on_users(email,password);
     - ALTER TABLE histories ADD INDEX index_user_id_on_historiess(user_id);
+- mysql tuning
+    - https://github.com/major/MySQLTuner-perl
+        - Variables to adjust:
+        - query_cache_size (=0)
+        - query_cache_type (=0)
+        - query_cache_limit (> 1M, or use smaller result sets)
+        - tmp_table_size (> 16M)
+        - max_heap_table_size (> 16M)
+        - thread_cache_size (start at 4)
+- nginx
+    - unix domain socket
