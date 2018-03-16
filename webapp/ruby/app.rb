@@ -162,6 +162,7 @@ INNER JOIN products as p
 ON h.product_id = p.id
 WHERE h.user_id = ?
 ORDER BY h.id DESC
+LIMIT 30
 SQL
     products = db.xquery(products_query, params[:user_id])
 
