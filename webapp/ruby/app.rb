@@ -175,7 +175,9 @@ SQL
   end
 
   get '/products/:product_id' do
-    product = db.xquery('SELECT * FROM products WHERE id = ?', params[:product_id]).first
+    product = cache.fetch("product_#{params[:product_id]}") do
+      db.xquery('SELECT * FROM products WHERE id = ?', params[:product_id]).first
+    end
     comments = db.xquery('SELECT * FROM comments WHERE product_id = ?', params[:product_id])
     erb :product, locals: { product: product, comments: comments }
   end
