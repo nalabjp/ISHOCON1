@@ -6,4 +6,5 @@
 - index
     - ALTER TABLE comments ADD INDEX index_product_id_on_comments(product_id);
     - ALTER TABLE comments ADD INDEX index_user_id_on_comments(user_id);
-
+    - ALTER TABLE users ADD INDEX index_email_password_on_users(email,password);
+    - ALTER TABLE histories ADD INDEX index_user_id_on_historiess(user_id);
